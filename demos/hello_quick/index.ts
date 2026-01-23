@@ -9,8 +9,9 @@ import { getLastFPS, incrementFPS, initFPSCounter } from "../../experimental/uni
 import { dt, initDeltaTime, updateDeltaTime } from "../../experimental/units/timing";
 import { spr, sprRegion } from "../../experimental/units/img_ref_fast";
 
-import { imgCGA, imgCursor, imgDosuEXE, measureDefault, printDefault } from "./assets";
+import { defaultFont, defaultFontGlyphs, imgCGA, imgCursor, imgDosuEXE, measureDefault, printDefault } from "./assets";
 import { measureBMFont, printBMFontChar } from "../../experimental/units/bmfont";
+import { writeLog, writeLogI32 } from "../../experimental/units/logger";
 
 enum TGameStates {
   GameStateIntro = 1,
@@ -75,6 +76,10 @@ function init(): void {
 
 function afterInit(): void {
   beginPlayingState();
+
+  writeLog("defaultFont");
+  writeLogI32(defaultFont.lineHeight);
+  writeLogI32(defaultFont.imgHandle)
 }
 
 function update(): void {
@@ -97,14 +102,20 @@ function update(): void {
   gameTime = gameTime + dt
 }
 
+function renderLoadingScreen(): void {
+  cls(0xFF000000);
+
+  vgaFlush();
+}
+
 function draw(): void {
   let w: Word;
   let s: string;
 
-  // if (actualGameState == TGameStates.GameStateLoading) {
-  //   renderLoadingScreen();
-  //   return
-  // }
+  if (actualGameState == TGameStates.GameStateLoading) {
+    renderLoadingScreen();
+    return
+  }
 
   cls(CornflowerBlue);
 
@@ -113,12 +124,14 @@ function draw(): void {
   else
     spr(imgDosuEXE[0], 148, 88);
 
-  s = "Hello world!";
-  w = measureDefault(s);
-  printDefault(s, (vgaWidth - 96) / 2, 120);
+  printBMFontChar(defaultFont, defaultFontGlyphs, 65, 10, 10);
+
+  // s = "Hello world!";
+  // w = measureDefault(s);
+  // printDefault(s, (vgaWidth - 96) / 2, 120);
 
   drawMouse();
-  drawFPS();
+  // drawFPS();
 
   vgaFlush()
 }
