@@ -1,6 +1,7 @@
 import { sprRegion } from "./img_ref_fast";
 import { Byte, LongInt, SmallInt, Word } from "./pascal_compat";
 
+@unmanaged
 export class TBMFontGlyph {
   id: Word;
   x: Word;
@@ -23,6 +24,7 @@ export class TBMFontGlyph {
   }
 }
 
+@unmanaged
 export class TBMFont {
   face: StaticArray<Byte>;
   filename: StaticArray<Byte>;

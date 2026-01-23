@@ -68,6 +68,12 @@ function beginPlayingState(): void {
 }
 
 
+// TODO: Call this from the glue code
+function cleanup(): void {
+  __free(changetype<pointer>(defaultFont));
+  __free(defaultFontGlyphs)
+}
+
 function init(): void {
   // initHeapMgr();
   initDeltaTime();

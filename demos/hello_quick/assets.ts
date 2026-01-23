@@ -4,10 +4,11 @@ import { measureBMFont, printBMFont, printBMFontChar, TBMFont, TBMFontGlyph } fr
 export let
   imgCursor: LongInt,
   imgCGA: LongInt,
-  imgDosuEXE = new StaticArray<LongInt>(2),
+  imgDosuEXE = new StaticArray<LongInt>(2);
   
-  defaultFont = new TBMFont(),
-  defaultFontGlyphs = new StaticArray<TBMFontGlyph>(127);
+export let
+  defaultFont: TBMFont = changetype<TBMFont>(__new(offsetof<TBMFont>(), idof<TBMFont>())),
+  defaultFontGlyphs: pointer = __new(127 * offsetof<TBMFontGlyph>(), idof<StaticArray<TBMFontGlyph>>());
 
 export function setImgCursor(imgHandle: LongInt): void {
   imgCursor = imgHandle
