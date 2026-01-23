@@ -1,4 +1,4 @@
-import { Byte, double, LongInt, SmallInt, Word } from "../../experimental/units/pascal_compat";
+import { Byte, double, LongInt, pointer, SmallInt, Word } from "../../experimental/units/pascal_compat";
 
 import { i32str } from "../../experimental/units/conv";
 import { cls, vgaFlush, vgaWidth } from "../../experimental/units/vga";

@@ -1,5 +1,5 @@
 import { sprRegion } from "./img_ref_fast";
-import { Byte, LongInt, SmallInt, Word } from "./pascal_compat";
+import { Byte, LongInt, pointer, SmallInt, Word } from "./pascal_compat";
 
 @unmanaged
 export class TBMFontGlyph {
@@ -44,7 +44,7 @@ export class TBMFont {
  */
 export function printBMFontChar(
   font: TBMFont,
-  fontGlyphs: StaticArray<TBMFontGlyph>,
+  fontGlyphs: pointer, // StaticArray<TBMFontGlyph>,
   charcode: Byte,
   x: SmallInt, y: SmallInt): SmallInt
 {
@@ -57,8 +57,8 @@ export function printBMFontChar(
   glyphIdx = charcode;
 
   // if (glyphIdx in [low(fontGlyphs)..high(fontGlyphs)]) {
-  if (glyphIdx < fontGlyphs.length) {
-    glyph = fontGlyphs[glyphIdx];
+  if (glyphIdx < 127) { // fontGlyphs.length
+    glyph = load<TBMFontGlyph>(fontGlyphs + glyphIdx * offsetof<TBMFontGlyph>());
 
     sprRegion(
       font.imgHandle,
@@ -73,7 +73,7 @@ export function printBMFontChar(
 
 export function printBMFont(
   font: TBMFont,
-  fontGlyphs: StaticArray<TBMFontGlyph>,
+  fontGlyphs: pointer, // StaticArray<TBMFontGlyph>,
   text: string,
   x: SmallInt, y: SmallInt): void
 {
@@ -83,7 +83,7 @@ export function printBMFont(
 
   for (a = 0; a < <Word>text.length; a++) {
     ch = <Byte>text[a].charCodeAt(0);
-    left +=  printBMFontChar(font, fontGlyphs, ch, x + left, y)
+    left += printBMFontChar(font, fontGlyphs, ch, x + left, y)
   }
 }
 
@@ -103,9 +103,6 @@ export function measureBMFont(glyphs: StaticArray<TBMFontGlyph>, text: string): 
     // { Assuming the starting charcode is always 32 }
     // glyphIdx = charcode - 32;
     glyphIdx = charcode;
-
-    // if (glyphIdx in [low(glyphs)..high(glyphs)]) then
-      // inc(result, glyphs[glyphIdx].xadvance)
 
     if (glyphIdx < glyphs.length)
       result += glyphs[glyphIdx].xadvance;
