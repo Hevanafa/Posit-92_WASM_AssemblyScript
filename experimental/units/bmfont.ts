@@ -87,11 +87,12 @@ export function printBMFont(
   }
 }
 
-export function measureBMFont(glyphs: StaticArray<TBMFontGlyph>, text: string): SmallInt
+export function measureBMFont(glyphs: pointer, text: string): SmallInt
 {
   let
     a: Word, result: Word,
     glyphIdx: SmallInt,
+    glyph: TBMFontGlyph,
     charcode: Byte;
 
   result = 0;
@@ -103,9 +104,8 @@ export function measureBMFont(glyphs: StaticArray<TBMFontGlyph>, text: string): 
     // { Assuming the starting charcode is always 32 }
     // glyphIdx = charcode - 32;
     glyphIdx = charcode;
-
-    if (glyphIdx < glyphs.length)
-      result += glyphs[glyphIdx].xadvance;
+    glyph = load<TBMFontGlyph>(glyphs + glyphIdx * offsetof<TBMFontGlyph>());
+    result += glyph.xadvance
   }
 
   return result
